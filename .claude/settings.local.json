@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh repo create:*)",
+      "Bash(git --version:*)",
+      "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; gh auth status\")",
+      "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; gh repo create virtual_lab --public --description ''A Python-based virtual laboratory environment'' --source . --push\")",
+      "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; git add .; git commit -m ''Initial commit: Virtual Lab project setup''; gh repo create virtual_lab --public --description ''A Python-based virtual laboratory environment'' --source . --push\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
