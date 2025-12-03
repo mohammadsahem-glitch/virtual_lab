@@ -20,7 +20,7 @@ from datetime import datetime
 from dataclasses import dataclass, field, asdict
 from typing import Optional
 import uuid
-import anthropic
+from openai import OpenAI
 
 # ============================================================
 # DATA MODELS
@@ -259,14 +259,14 @@ def save_session_data(session_id: str, data: dict):
         json.dump(data, f, indent=2)
 
 # ============================================================
-# ANTHROPIC API SERVICE
+# OPENAI API SERVICE
 # ============================================================
 
-class AnthropicService:
+class OpenAIService:
     def __init__(self, api_key: str):
         self.api_key = api_key
-        self.client = anthropic.Anthropic(api_key=api_key) if api_key else None
-        self.model = "claude-sonnet-4-5-20250929"
+        self.client = OpenAI(api_key=api_key) if api_key else None
+        self.model = "gpt-4o"
 
     def send_message(self, messages: list, system_prompt: str = None) -> str:
         """Send a message and get a response."""
@@ -274,18 +274,17 @@ class AnthropicService:
             return "Error: API key not configured. Please set your API key in Settings."
 
         try:
-            api_messages = [{"role": m["role"], "content": m["content"]} for m in messages]
-
-            kwargs = {
-                "model": self.model,
-                "max_tokens": 4096,
-                "messages": api_messages
-            }
+            api_messages = []
             if system_prompt:
-                kwargs["system"] = system_prompt
+                api_messages.append({"role": "system", "content": system_prompt})
+            api_messages.extend([{"role": m["role"], "content": m["content"]} for m in messages])
 
-            response = self.client.messages.create(**kwargs)
-            return response.content[0].text
+            response = self.client.chat.completions.create(
+                model=self.model,
+                max_tokens=4096,
+                messages=api_messages
+            )
+            return response.choices[0].message.content
         except Exception as e:
             return f"Error: {str(e)}"
 
@@ -348,9 +347,9 @@ def save_current_session_data():
     }
     save_session_data(st.session_state.current_session_id, data)
 
-def get_api_service() -> AnthropicService:
-    """Get the Anthropic API service."""
-    return AnthropicService(st.session_state.api_key)
+def get_api_service() -> OpenAIService:
+    """Get the OpenAI API service."""
+    return OpenAIService(st.session_state.api_key)
 
 # ============================================================
 # STAGE VIEWS
@@ -925,10 +924,10 @@ def settings_view():
 
     # API Key input
     api_key = st.text_input(
-        "Anthropic API Key",
+        "OpenAI API Key",
         value=st.session_state.api_key,
         type="password",
-        help="Enter your Anthropic API key to use the AI features"
+        help="Enter your OpenAI API key to use the AI features"
     )
 
     if st.button("Save API Key"):
@@ -943,7 +942,7 @@ def settings_view():
         st.warning("⚠️ No API key configured")
         st.markdown("""
         To get an API key:
-        1. Go to [console.anthropic.com](https://console.anthropic.com)
+        1. Go to [platform.openai.com](https://platform.openai.com)
         2. Sign up or log in
         3. Navigate to API Keys
         4. Create a new API key
