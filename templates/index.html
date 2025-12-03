@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Lab - AI Research Collaboration</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="login-page" class="page">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1>Virtual Lab</h1>
+                    <p>AI-Powered Research Collaboration</p>
+                </div>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+                    <div id="login-error" class="error-message hidden"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="app-page" class="page hidden">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Virtual Lab</h2>
+                <div id="user-info">
+                    <span id="user-name"></span>
+                    <span id="user-role" class="badge"></span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-stage="discovery">
+                    <span class="nav-icon">1</span>
+                    <span class="nav-text">Discovery</span>
+                </button>
+                <button class="nav-item" data-stage="task">
+                    <span class="nav-icon">2</span>
+                    <span class="nav-text">Task</span>
+                </button>
+                <button class="nav-item" data-stage="people">
+                    <span class="nav-icon">3</span>
+                    <span class="nav-text">People</span>
+                </button>
+                <button class="nav-item" data-stage="research">
+                    <span class="nav-icon">4</span>
+                    <span class="nav-text">Research</span>
+                </button>
+                <button class="nav-item" data-stage="meetings">
+                    <span class="nav-icon">5</span>
+                    <span class="nav-text">Meetings</span>
+                </button>
+                <button class="nav-item" data-stage="report">
+                    <span class="nav-icon">6</span>
+                    <span class="nav-text">Report</span>
+                </button>
+                <button class="nav-item" data-stage="export">
+                    <span class="nav-icon">7</span>
+                    <span class="nav-text">Export</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="session-manager">
+                <label for="session-select">Session:</label>
+                <select id="session-select"></select>
+                <div class="session-buttons">
+                    <button id="new-session-btn" class="btn btn-sm">New</button>
+                    <button id="delete-session-btn" class="btn btn-sm btn-danger">Delete</button>
+                </div>
+            </div>
+
+            <div class="sidebar-divider"></div>
+
+            <nav class="sidebar-nav secondary">
+                <button class="nav-item" data-stage="settings">
+                    <span class="nav-text">Settings</span>
+                </button>
+                <button class="nav-item" data-stage="prompts">
+                    <span class="nav-text">Prompts</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="logout-btn" class="btn btn-secondary btn-full">Sign Out</button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Discovery Stage -->
+            <div id="stage-discovery" class="stage active">
+                <div class="stage-header">
+                    <h1>Discovery</h1>
+                    <p>Chat with AI to understand and refine your research task</p>
+                </div>
+                <div class="chat-container">
+                    <div id="discovery-messages" class="chat-messages"></div>
+                    <div class="chat-input-container">
+                        <textarea id="discovery-input" placeholder="Describe your research task..." rows="3"></textarea>
+                        <button id="discovery-send-btn" class="btn btn-primary">Send</button>
+                    </div>
+                    <button id="generate-summary-btn" class="btn btn-success btn-full">Generate Summary</button>
+                </div>
+            </div>
+
+            <!-- Task Stage -->
+            <div id="stage-task" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Task Summary</h1>
+                    <p>Executive summary of your research task</p>
+                </div>
+                <div class="content-card">
+                    <div id="task-summary" class="summary-content">
+                        <p class="placeholder">Complete the Discovery phase to generate a task summary.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- People Stage -->
+            <div id="stage-people" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Team Members</h1>
+                    <p>AI-identified interdisciplinary team for your research</p>
+                </div>
+                <button id="generate-people-btn" class="btn btn-primary">Generate Team Members</button>
+                <div id="people-list" class="cards-grid"></div>
+            </div>
+
+            <!-- Research Stage -->
+            <div id="stage-research" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Research Findings</h1>
+                    <p>Relevant precedents and examples from around the world</p>
+                </div>
+                <button id="generate-research-btn" class="btn btn-primary">Generate Research Findings</button>
+                <div id="research-list" class="cards-grid"></div>
+            </div>
+
+            <!-- Meetings Stage -->
+            <div id="stage-meetings" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Expert Meetings</h1>
+                    <p>Simulate discussions between your expert team</p>
+                </div>
+                <div class="meetings-container">
+                    <div class="meeting-selector">
+                        <label for="meeting-select">Select Topic:</label>
+                        <select id="meeting-select"></select>
+                    </div>
+                    <div id="meeting-content" class="meeting-content">
+                        <div id="meeting-messages" class="chat-messages"></div>
+                        <div class="meeting-controls">
+                            <div class="expert-selector">
+                                <label for="expert-select">Ask Expert:</label>
+                                <select id="expert-select">
+                                    <option value="">Next in rotation</option>
+                                </select>
+                            </div>
+                            <div class="user-input-group">
+                                <input type="text" id="meeting-user-input" placeholder="Ask a question to the experts...">
+                            </div>
+                            <div class="meeting-buttons">
+                                <button id="meeting-next-btn" class="btn btn-primary">Next Response</button>
+                                <button id="meeting-auto-btn" class="btn btn-secondary">Auto Run 5</button>
+                                <button id="meeting-end-btn" class="btn btn-success">End & Summarize</button>
+                                <button id="meeting-reset-btn" class="btn btn-danger">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Stage -->
+            <div id="stage-report" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Final Report</h1>
+                    <p>Comprehensive report from all meeting insights</p>
+                </div>
+                <button id="generate-report-btn" class="btn btn-primary">Generate Final Report</button>
+                <div id="report-content" class="content-card">
+                    <div id="final-report" class="report-content markdown-content"></div>
+                </div>
+                <div class="report-chat">
+                    <h3>Ask Questions About the Report</h3>
+                    <div id="report-chat-messages" class="chat-messages"></div>
+                    <div class="chat-input-container">
+                        <input type="text" id="report-chat-input" placeholder="Ask a question about the report...">
+                        <button id="report-chat-send-btn" class="btn btn-primary">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Stage -->
+            <div id="stage-export" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Export</h1>
+                    <p>Download your research data and report</p>
+                </div>
+                <div class="export-options">
+                    <div class="export-card">
+                        <h3>Markdown Report</h3>
+                        <p>Download the final report in Markdown format</p>
+                        <button id="export-markdown-btn" class="btn btn-primary">Download Markdown</button>
+                    </div>
+                    <div class="export-card">
+                        <h3>Full Session Data</h3>
+                        <p>Download all session data including meetings and research</p>
+                        <button id="export-json-btn" class="btn btn-primary">Download JSON</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Stage -->
+            <div id="stage-settings" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Settings</h1>
+                    <p>Configure your Virtual Lab settings</p>
+                </div>
+                <div class="content-card">
+                    <div class="form-group">
+                        <label for="api-key-input">OpenAI API Key</label>
+                        <input type="password" id="api-key-input" placeholder="sk-...">
+                        <button id="save-api-key-btn" class="btn btn-primary">Save API Key</button>
+                    </div>
+                    <div id="api-key-status" class="status-message"></div>
+                </div>
+            </div>
+
+            <!-- Prompts Stage -->
+            <div id="stage-prompts" class="stage hidden">
+                <div class="stage-header">
+                    <h1>Prompts</h1>
+                    <p>Customize the AI prompts used throughout the workflow</p>
+                </div>
+                <div class="prompts-container">
+                    <div id="prompts-list"></div>
+                    <div class="prompts-actions">
+                        <button id="save-prompts-btn" class="btn btn-primary">Save Prompts</button>
+                        <button id="reset-prompts-btn" class="btn btn-danger">Reset to Defaults</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+        <p id="loading-text">Loading...</p>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
