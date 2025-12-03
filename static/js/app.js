@@ -338,12 +338,42 @@ async function generateSummary() {
 // ============================================================
 
 function renderTaskSummary() {
-    const container = document.getElementById('task-summary');
+    const displayContainer = document.getElementById('task-summary-display');
+    const editBtn = document.getElementById('edit-summary-btn');
+
     if (state.sessionData.summary) {
-        container.innerHTML = `<div class="markdown-content">${formatMarkdown(state.sessionData.summary)}</div>`;
+        displayContainer.innerHTML = `<div class="markdown-content">${formatMarkdown(state.sessionData.summary)}</div>`;
+        editBtn.classList.remove('hidden');
     } else {
-        container.innerHTML = '<p class="placeholder">Complete the Discovery phase to generate a task summary.</p>';
+        displayContainer.innerHTML = '<p class="placeholder">Complete the Discovery phase to generate a task summary.</p>';
+        editBtn.classList.add('hidden');
     }
+}
+
+function toggleSummaryEdit(showEdit) {
+    const displayContainer = document.getElementById('task-summary-display');
+    const editContainer = document.getElementById('task-summary-edit');
+    const editBtn = document.getElementById('edit-summary-btn');
+    const textarea = document.getElementById('task-summary-textarea');
+
+    if (showEdit) {
+        textarea.value = state.sessionData.summary;
+        displayContainer.classList.add('hidden');
+        editContainer.classList.remove('hidden');
+        editBtn.classList.add('hidden');
+    } else {
+        displayContainer.classList.remove('hidden');
+        editContainer.classList.add('hidden');
+        editBtn.classList.remove('hidden');
+    }
+}
+
+async function saveSummaryEdit() {
+    const textarea = document.getElementById('task-summary-textarea');
+    state.sessionData.summary = textarea.value;
+    await saveSessionData();
+    renderTaskSummary();
+    toggleSummaryEdit(false);
 }
 
 // ============================================================
@@ -352,15 +382,67 @@ function renderTaskSummary() {
 
 function renderPeople() {
     const container = document.getElementById('people-list');
-    container.innerHTML = state.sessionData.people.map(person => `
-        <div class="card">
-            <h3>${escapeHtml(person.title)}</h3>
-            <p>${escapeHtml(person.description)}</p>
+    container.innerHTML = state.sessionData.people.map((person, index) => `
+        <div class="card card-editable" data-person-index="${index}">
+            <button class="btn btn-secondary btn-xs card-edit-btn" onclick="togglePersonEdit(${index})">Edit</button>
+            <div class="person-display" id="person-display-${index}">
+                <h3>${escapeHtml(person.title)}</h3>
+                <p>${escapeHtml(person.description)}</p>
+            </div>
+            <div class="card-edit-form hidden" id="person-edit-${index}">
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="person-title-${index}" value="${escapeHtml(person.title)}">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="person-desc-${index}">${escapeHtml(person.description)}</textarea>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-success btn-xs" onclick="savePersonEdit(${index})">Save</button>
+                    <button class="btn btn-secondary btn-xs" onclick="cancelPersonEdit(${index})">Cancel</button>
+                </div>
+            </div>
         </div>
     `).join('');
 
     // Update expert select in meetings
     updateExpertSelect();
+}
+
+function togglePersonEdit(index) {
+    const display = document.getElementById(`person-display-${index}`);
+    const edit = document.getElementById(`person-edit-${index}`);
+    const editBtn = display.parentElement.querySelector('.card-edit-btn');
+
+    display.classList.add('hidden');
+    edit.classList.remove('hidden');
+    editBtn.classList.add('hidden');
+}
+
+function cancelPersonEdit(index) {
+    const display = document.getElementById(`person-display-${index}`);
+    const edit = document.getElementById(`person-edit-${index}`);
+    const editBtn = display.parentElement.querySelector('.card-edit-btn');
+
+    // Reset values
+    document.getElementById(`person-title-${index}`).value = state.sessionData.people[index].title;
+    document.getElementById(`person-desc-${index}`).value = state.sessionData.people[index].description;
+
+    display.classList.remove('hidden');
+    edit.classList.add('hidden');
+    editBtn.classList.remove('hidden');
+}
+
+async function savePersonEdit(index) {
+    const title = document.getElementById(`person-title-${index}`).value;
+    const description = document.getElementById(`person-desc-${index}`).value;
+
+    state.sessionData.people[index].title = title;
+    state.sessionData.people[index].description = description;
+
+    await saveSessionData();
+    renderPeople();
 }
 
 async function generatePeople() {
@@ -944,11 +1026,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('generate-summary-btn').addEventListener('click', generateSummary);
 
+    // Task stage - edit functionality and navigation
+    document.getElementById('edit-summary-btn').addEventListener('click', () => toggleSummaryEdit(true));
+    document.getElementById('save-summary-btn').addEventListener('click', saveSummaryEdit);
+    document.getElementById('cancel-summary-btn').addEventListener('click', () => toggleSummaryEdit(false));
+    document.getElementById('task-next-btn').addEventListener('click', () => switchStage('people'));
+
     // People stage
     document.getElementById('generate-people-btn').addEventListener('click', generatePeople);
+    document.getElementById('people-next-btn').addEventListener('click', () => switchStage('research'));
 
     // Research stage
     document.getElementById('generate-research-btn').addEventListener('click', generateResearch);
+    document.getElementById('research-next-btn').addEventListener('click', () => switchStage('meetings'));
 
     // Meetings stage
     document.getElementById('meeting-select').addEventListener('change', (e) => {

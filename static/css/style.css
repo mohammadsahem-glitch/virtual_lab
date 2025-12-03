@@ -740,6 +740,82 @@ body {
 }
 
 /* ============================================================
+   Edit Mode & Stage Navigation
+   ============================================================ */
+
+.edit-textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 150px;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.stage-navigation {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.card-editable {
+    position: relative;
+}
+
+.card-edit-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    padding: 4px 12px;
+    font-size: 0.8rem;
+}
+
+.card-edit-form {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.card-edit-form .form-group {
+    margin-bottom: 12px;
+}
+
+.card-edit-form input,
+.card-edit-form textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.card-edit-form textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.btn-xs {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+}
+
+/* ============================================================
    Responsive Design
    ============================================================ */
 

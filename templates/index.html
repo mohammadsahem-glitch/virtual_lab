@@ -126,9 +126,20 @@
                     <p>Executive summary of your research task</p>
                 </div>
                 <div class="content-card">
-                    <div id="task-summary" class="summary-content">
+                    <div id="task-summary-display" class="summary-content">
                         <p class="placeholder">Complete the Discovery phase to generate a task summary.</p>
                     </div>
+                    <div id="task-summary-edit" class="hidden">
+                        <textarea id="task-summary-textarea" rows="10" class="edit-textarea"></textarea>
+                        <div class="edit-buttons">
+                            <button id="save-summary-btn" class="btn btn-success">Save Changes</button>
+                            <button id="cancel-summary-btn" class="btn btn-secondary">Cancel</button>
+                        </div>
+                    </div>
+                    <button id="edit-summary-btn" class="btn btn-secondary btn-sm">Edit Summary</button>
+                </div>
+                <div class="stage-navigation">
+                    <button id="task-next-btn" class="btn btn-primary">Identify Team Members →</button>
                 </div>
             </div>
 
@@ -140,6 +151,9 @@
                 </div>
                 <button id="generate-people-btn" class="btn btn-primary">Generate Team Members</button>
                 <div id="people-list" class="cards-grid"></div>
+                <div class="stage-navigation">
+                    <button id="people-next-btn" class="btn btn-primary">Conduct Research →</button>
+                </div>
             </div>
 
             <!-- Research Stage -->
@@ -150,6 +164,9 @@
                 </div>
                 <button id="generate-research-btn" class="btn btn-primary">Generate Research Findings</button>
                 <div id="research-list" class="cards-grid"></div>
+                <div class="stage-navigation">
+                    <button id="research-next-btn" class="btn btn-primary">Start Meetings →</button>
+                </div>
             </div>
 
             <!-- Meetings Stage -->
