@@ -5,7 +5,10 @@
       "Bash(git --version:*)",
       "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; gh auth status\")",
       "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; gh repo create virtual_lab --public --description ''A Python-based virtual laboratory environment'' --source . --push\")",
-      "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; git add .; git commit -m ''Initial commit: Virtual Lab project setup''; gh repo create virtual_lab --public --description ''A Python-based virtual laboratory environment'' --source . --push\")"
+      "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; git add .; git commit -m ''Initial commit: Virtual Lab project setup''; gh repo create virtual_lab --public --description ''A Python-based virtual laboratory environment'' --source . --push\")",
+      "Bash(powershell -Command \"Remove-Item -Recurse -Force ''c:\\Users\\moham\\virtual_lab\\virtual_lab_python''\")",
+      "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; git status\")",
+      "Bash(powershell -Command \"cd ''c:\\Users\\moham\\virtual_lab''; git add .; git commit -m ''Upgrade to full Virtual Lab Streamlit application\n\n- Replace basic app.py with full-featured research collaboration tool\n- Add Streamlit and Anthropic dependencies\n- Update README with comprehensive documentation\n- Remove temporary virtual_lab_python folder\n\nFeatures:\n- AI-guided discovery workflow\n- Team member identification\n- Research findings generation\n- Expert meeting simulation\n- Final report generation\n- Session management and export''\")"
     ],
     "deny": [],
     "ask": []
