@@ -53,9 +53,7 @@ Virtual Lab helps you conduct structured research through an AI-guided workflow:
 
 5. Open your browser to `http://localhost:5000`
 
-6. Login with:
-   - Username: `TestUserAD`
-   - Password: `ADPM1987@AD`
+
 
 7. Enter your OpenAI API key in the Settings page
 
